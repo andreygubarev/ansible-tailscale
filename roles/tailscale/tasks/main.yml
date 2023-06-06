@@ -4,6 +4,8 @@
     that:
       - ansible_distribution in ['Ubuntu', 'Debian']
       - ansible_distribution_release in ['focal', 'jammy', 'bullseye']
+    success_msg: "Supported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
+    fail_msg: "Unsupported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
 
 - name: Add APT key
   ansible.builtin.apt_key:
@@ -45,6 +47,8 @@
         that:
           - tailscale_auth_key is defined
           - tailscale_auth_key != ""
+        success_msg: "Tailscale auth key is defined"
+        fail_msg: "Tailscale auth key is not defined"
 
     - name: Register Tailscale node
       ansible.builtin.command: >-
