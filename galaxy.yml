@@ -1,0 +1,26 @@
+namespace: andreygubarev
+name: tailscale
+version: 1.0.0
+
+readme: README.md
+
+authors:
+  - Andrey Gubarev <andrey@andreygubarev.com> (andreygubarev.com)
+
+description: Ansible Collection for setting up Tailscale
+license_file: LICENSE
+
+tags: []
+
+dependencies: {}
+
+repository: https://github.com/andreygubarev/ansible-tailscale
+documentation: https://github.com/andreygubarev/ansible-tailscale
+homepage: https://github.com/andreygubarev/ansible-tailscale
+issues: https://github.com/andreygubarev/ansible-tailscale/issues
+
+build_ignore:
+  - Makefile
+  - .venv
+  - .git
+  - .gitignore
