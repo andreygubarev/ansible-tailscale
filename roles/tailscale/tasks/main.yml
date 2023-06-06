@@ -1,5 +1,5 @@
 ---
-- name: Assert that the OS is supported
+- name: Assert supported OS
   ansible.builtin.assert:
     that:
       - ansible_distribution in ['Ubuntu', 'Debian']
