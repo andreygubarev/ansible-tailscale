@@ -1,1 +1,34 @@
 ---
+- name: Assert that the OS is supported
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution in ['Ubuntu', 'Debian']
+      - ansible_distribution_release in ['focal', 'jammy', 'bullseye']
+
+- name: Add APT key
+  ansible.builtin.apt_key:
+    url: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg
+    state: present
+
+- name: Download APT repository
+  ansible.builtin.get_url:
+    url: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.list
+    dest: /etc/apt/sources.list.d/tailscale.list
+    mode: '0644'
+  register: tailscale_apt_repository
+
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+  when: tailscale_apt_repository.changed
+
+- name: Install Tailscale
+  ansible.builtin.apt:
+    name: tailscale
+    state: latest
+
+- name: Enable Tailscale service
+  ansible.builtin.service:
+    name: tailscaled
+    enabled: true
+    state: started
