@@ -10,7 +10,10 @@ authors:
 description: Ansible Collection for setting up Tailscale
 license_file: LICENSE
 
-tags: []
+tags:
+  - linux
+  - networking
+  - tools
 
 dependencies: {}
 
