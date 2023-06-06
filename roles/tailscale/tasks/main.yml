@@ -32,3 +32,25 @@
     state: present
     timeout: 60
 
+- name: Register Tailscale status
+  ansible.builtin.command: tailscale status --json
+  register: tailscale_status
+  changed_when: false
+
+- name: Register Tailscale node
+  when: (tailscale_status.stdout | from_json)['BackendState'] == 'NeedsLogin'
+  block:
+    - name: Assert Tailscale auth key is defined
+      ansible.builtin.assert:
+        that:
+          - tailscale_auth_key is defined
+          - tailscale_auth_key != ""
+
+    - name: Register Tailscale node
+      ansible.builtin.command: >-
+        tailscale up
+        {% if tailscale_login_server %}
+        --login-server {{ tailscale_login_server }}
+        {% endif %}
+        --auth-key {{ tailscale_auth_key }}
+      changed_when: true
