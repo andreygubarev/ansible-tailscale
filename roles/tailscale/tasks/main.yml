@@ -7,6 +7,19 @@
     success_msg: "Supported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
     fail_msg: "Unsupported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
 
+- name: APT cache update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install APT dependencies
+  ansible.builtin.apt:
+    name: gnupg
+      - gnupg
+      - apt-transport-https
+      - ca-certificates
+    state: present
+
 - name: Add APT key
   ansible.builtin.apt_key:
     url: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg
