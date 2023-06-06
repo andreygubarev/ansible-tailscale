@@ -10,22 +10,15 @@
     url: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.noarmor.gpg
     state: present
 
-- name: Download APT repository
-  ansible.builtin.get_url:
-    url: https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}.list
-    dest: /etc/apt/sources.list.d/tailscale.list
-    mode: '0644'
-  register: tailscale_apt_repository
-
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: true
-  when: tailscale_apt_repository.changed
+- name: Add APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://pkgs.tailscale.com/stable/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    state: present
 
 - name: Install Tailscale
   ansible.builtin.apt:
     name: tailscale
-    state: latest
+    state: present
 
 - name: Enable Tailscale service
   ansible.builtin.service:
