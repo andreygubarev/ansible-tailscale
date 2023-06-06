@@ -25,3 +25,10 @@
     name: tailscaled
     enabled: true
     state: started
+
+- name: Wait for Tailscale to be ready
+  ansible.builtin.wait_for:
+    path: /var/run/tailscale/tailscaled.sock
+    state: present
+    timeout: 60
+
