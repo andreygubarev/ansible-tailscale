@@ -42,7 +42,6 @@
     owner: root
     group: root
     mode: 0644
-    validate: /lib/systemd/systemd --test --unit=%
   register: tailscaled_service
 
 - name: Set Tailscale service state
@@ -50,10 +49,10 @@
     tailscaled_service_state: "{{ tailscaled_service.changed | ternary('restarted', 'started') }}"
 
 - name: Enable Tailscale service
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: "{{ tailscale_service_name }}"
     enabled: true
-    reload_daemon: "{{ tailscaled_service.changed }}"
+    daemon_reload: "{{ tailscaled_service.changed }}"
     state: "{{ tailscaled_service_state }}"
 
 - name: Wait for Tailscale to be ready
