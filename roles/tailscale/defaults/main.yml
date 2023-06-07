@@ -2,12 +2,12 @@
 tailscale_auth_key: ""
 tailscale_login_server: ""
 
-tailscaled_state: "/var/lib/tailscale/tailscaled.state"
-tailscaled_socket: "/run/tailscale/tailscaled.sock"
-tailscaled_logs: false
-tailscaled_args: >-
-  {% if not tailscaled_logs %}
+tailscale_state: "/var/lib/tailscale/tailscaled.state"
+tailscale_socket: "/run/tailscale/tailscaled.sock"
+tailscale_logs: false
+tailscale_args: >-
+  {% if not tailscale_logs %}
   --no-logs-no-support
   {% endif %}
-  --state={{ tailscaled_state }}
-  --socket={{ tailscaled_socket }}
+  --state={{ tailscale_state }}
+  --socket={{ tailscale_socket }}

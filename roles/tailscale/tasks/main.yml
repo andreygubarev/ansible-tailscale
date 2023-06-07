@@ -42,25 +42,25 @@
     owner: root
     group: root
     mode: 0644
-  register: tailscaled_systemd_service
+  register: tailscale_systemd_service
 
 - name: Enable Tailscale service
   ansible.builtin.systemd:
     name: tailscaled
     enabled: true
-    daemon_reload: "{{ tailscaled_systemd_service.changed }}"
-    state: "{{ tailscaled_systemd_service.changed | ternary('restarted', 'started') }}"
+    daemon_reload: "{{ tailscale_systemd_service.changed }}"
+    state: "{{ tailscale_systemd_service.changed | ternary('restarted', 'started') }}"
 
 - name: Wait for Tailscale to be ready
   ansible.builtin.wait_for:
-    path: "{{ tailscaled_socket }}"
+    path: "{{ tailscale_socket }}"
     state: present
     timeout: 60
 
 - name: Register Tailscale status
   ansible.builtin.command: >-
     tailscale
-    --socket {{ tailscaled_socket }}
+    --socket {{ tailscale_socket }}
     status --json
   register: tailscale_status
   changed_when: false
@@ -79,7 +79,7 @@
     - name: Register Tailscale node
       ansible.builtin.command: >-
         tailscale
-        --socket {{ tailscaled_socket }}
+        --socket {{ tailscale_socket }}
         up
         {% if tailscale_login_server %}
         --login-server {{ tailscale_login_server }}
