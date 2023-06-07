@@ -35,20 +35,38 @@
     name: tailscale
     state: present
 
+- name: Create Tailscale service
+  ansible.builtin.template:
+    src: tailscaled.service.j2
+    dest: "/lib/systemd/system/{{ tailscale_service_name }}.service"
+    owner: root
+    group: root
+    mode: 0644
+    validate: /lib/systemd/systemd --test --unit=%
+  register: tailscaled_service
+
+- name: Set Tailscale service state
+  ansible.builtin.set_fact:
+    tailscaled_service_state: "{{ tailscaled_service.changed | ternary('restarted', 'started') }}"
+
 - name: Enable Tailscale service
   ansible.builtin.service:
-    name: tailscaled
+    name: "{{ tailscale_service_name }}"
     enabled: true
-    state: started
+    reload_daemon: "{{ tailscaled_service.changed }}"
+    state: "{{ tailscaled_service_state }}"
 
 - name: Wait for Tailscale to be ready
   ansible.builtin.wait_for:
-    path: /var/run/tailscale/tailscaled.sock
+    path: "{{ tailscale_service_socket }}"
     state: present
     timeout: 60
 
 - name: Register Tailscale status
-  ansible.builtin.command: tailscale status --json
+  ansible.builtin.command: >-
+    tailscale
+    --socket {{ tailscale_service_socket }}
+    status --json
   register: tailscale_status
   changed_when: false
 
@@ -65,7 +83,9 @@
 
     - name: Register Tailscale node
       ansible.builtin.command: >-
-        tailscale up
+        tailscale
+        --socket {{ tailscale_service_socket }}
+        up
         {% if tailscale_login_server %}
         --login-server {{ tailscale_login_server }}
         {% endif %}

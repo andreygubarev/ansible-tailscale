@@ -1,3 +1,7 @@
 ---
 tailscale_auth_key: ""
 tailscale_login_server: ""
+
+tailscale_service_name: "tailscaled"
+tailscale_service_state: "/var/lib/tailscale/tailscaled.state"
+tailscale_service_socket: "/run/tailscale/tailscaled.sock"
