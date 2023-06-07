@@ -38,33 +38,29 @@
 - name: Create Tailscale service
   ansible.builtin.template:
     src: tailscaled.service.j2
-    dest: "/lib/systemd/system/{{ tailscale_service_name }}.service"
+    dest: /lib/systemd/system/tailscaled.service
     owner: root
     group: root
     mode: 0644
-  register: tailscaled_service
-
-- name: Set Tailscale service state
-  ansible.builtin.set_fact:
-    tailscaled_service_state: "{{ tailscaled_service.changed | ternary('restarted', 'started') }}"
+  register: tailscaled_systemd_service
 
 - name: Enable Tailscale service
   ansible.builtin.systemd:
-    name: "{{ tailscale_service_name }}"
+    name: tailscaled
     enabled: true
-    daemon_reload: "{{ tailscaled_service.changed }}"
-    state: "{{ tailscaled_service_state }}"
+    daemon_reload: "{{ tailscaled_systemd_service.changed }}"
+    state: "{{ tailscaled_systemd_service.changed | ternary('restarted', 'started') }}"
 
 - name: Wait for Tailscale to be ready
   ansible.builtin.wait_for:
-    path: "{{ tailscale_service_socket }}"
+    path: "{{ tailscaled_socket }}"
     state: present
     timeout: 60
 
 - name: Register Tailscale status
   ansible.builtin.command: >-
     tailscale
-    --socket {{ tailscale_service_socket }}
+    --socket {{ tailscaled_socket }}
     status --json
   register: tailscale_status
   changed_when: false
@@ -83,7 +79,7 @@
     - name: Register Tailscale node
       ansible.builtin.command: >-
         tailscale
-        --socket {{ tailscale_service_socket }}
+        --socket {{ tailscaled_socket }}
         up
         {% if tailscale_login_server %}
         --login-server {{ tailscale_login_server }}
