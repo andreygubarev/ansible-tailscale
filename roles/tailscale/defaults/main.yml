@@ -5,3 +5,14 @@ tailscale_login_server: ""
 tailscale_service_name: "tailscaled"
 tailscale_service_state: "/var/lib/tailscale/tailscaled.state"
 tailscale_service_socket: "/run/tailscale/tailscaled.sock"
+tailscale_service_logs: false
+tailscale_service_args: >-
+  {% if not tailscale_service_logs %}
+  --no-logs-no-support
+  {% endif %}
+  {% if tailscale_service_state %}
+  --state={{ tailscale_service_state }}
+  {% else %}
+  --state=mem:
+  {% endif %}
+  --socket={{ tailscale_service_socket }}
