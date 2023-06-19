@@ -18,6 +18,8 @@
     checksum: "{{ headscale_checksum }}"
     dest: "{{ headscale_binary }}"
     mode: 0755
+    owner: root
+    group: root
 
 - name: Create Headscale directories
   ansible.builtin.file:
