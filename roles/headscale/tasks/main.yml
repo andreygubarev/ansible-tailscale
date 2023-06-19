@@ -32,11 +32,20 @@
 
 - name: Create Headscale config
   ansible.builtin.template:
-    src: config.yaml.j2
+    src: headscale.yaml.j2
     dest: "{{ headscale_config }}"
     owner: root
     group: root
     mode: 0644
+  register: headscale_config
+
+- name: Check Headscale config
+  ansible.builtin.command: >
+    {{ headscale_binary }}
+    --config {{ headscale_config }}
+    configtest
+  changed_when: false
+  when: headscale_config is changed
 
 - name: Create Headscale service
   ansible.builtin.template:
