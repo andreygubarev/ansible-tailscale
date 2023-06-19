@@ -12,5 +12,11 @@ platforms:
     network_ssh_port: 2222
 provisioner:
   name: ansible
+  inventory:
+    host_vars:
+      debian-bullseye-arm64:
+        headscale_confdir: /mnt/local/headscale/config
+        headscale_rundir: /mnt/local/headscale/run
+        headscale_statedir: /mnt/local/headscale/state
 verifier:
   name: testinfra
