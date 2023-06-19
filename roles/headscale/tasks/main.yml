@@ -14,7 +14,8 @@
 
 - name: Download Headscale binary
   ansible.builtin.get_url:
-    url: "{{ headscale_download }}"
+    url: "{{ headscale_url }}"
+    checksum: "{{ headscale_checksum }}"
     dest: "{{ headscale_binary }}"
     mode: 0755
 
