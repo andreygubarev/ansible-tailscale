@@ -1,1 +1,20 @@
 ---
+- name: Assert supported OS
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution in ['Ubuntu', 'Debian']
+      - ansible_distribution_release in ['focal', 'jammy', 'bullseye']
+    success_msg: "Supported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
+    fail_msg: "Unsupported OS detected: {{ ansible_distribution }} {{ ansible_distribution_release }}"
+
+- name: APT cache update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Download headscale binary
+  ansible.builtin.get_url:
+    url: "{{ headscale_download }}"
+    dest: "{{ headscale_binary }}"
+    mode: 0755
+
