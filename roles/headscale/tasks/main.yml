@@ -18,6 +18,14 @@
     dest: "{{ headscale_binary }}"
     mode: 0755
 
+- name: Create Headscale config
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: /etc/headscale/config.yaml
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Create Headscale service
   ansible.builtin.template:
     src: headscale.service.j2
