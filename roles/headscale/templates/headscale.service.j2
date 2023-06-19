@@ -1,0 +1,57 @@
+[Unit]
+After=syslog.target
+After=network.target
+Description=headscale coordination server for Tailscale
+X-Restart-Triggers={{ headscale_config }}
+
+[Service]
+Type=simple
+User={{ headscale_user }}
+Group={{ headscale_group }}
+ExecStart={{ headscale_binary }} --config {{ headscale_config }} serve
+Restart=always
+RestartSec=5
+
+WorkingDirectory={{ headscale_statedir }}
+ReadWritePaths={{ headscale_statedir }} {{ headscale_rundir }}
+
+AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_CHOWN
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_CHOWN
+LockPersonality=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateMounts=true
+PrivateTmp=true
+ProcSubset=pid
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+RemoveIPC=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=@chown
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+UMask=0077
+
+{% if headscale_statedir == "/var/lib/headscale" %}
+StateDirectory=headscale
+StateDirectoryMode=0750
+{% endif %}
+
+{% if headscale_rundir == "/var/run/headscale" %}
+RuntimeDirectory=headscale
+RuntimeDirectoryMode=0750
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
