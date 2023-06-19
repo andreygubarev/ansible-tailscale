@@ -43,12 +43,12 @@ SystemCallFilter=@system-service
 SystemCallFilter=~@privileged
 UMask=0077
 
-{% if headscale_statedir != '/var/lib/headscale' %}
+{% if headscale_statedir == "/var/lib/headscale" %}
 StateDirectory=headscale
 StateDirectoryMode=0750
 {% endif %}
 
-{% if headscale_rundir != '/var/run/headscale' %}
+{% if headscale_rundir == "/var/run/headscale" %}
 RuntimeDirectory=headscale
 RuntimeDirectoryMode=0750
 {% endif %}
