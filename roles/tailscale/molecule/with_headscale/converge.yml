@@ -11,8 +11,8 @@
     - name: Get auth key
       ansible.builtin.shell: |
         set -euo pipefail
-        headscale users create headscale || true
-        headscale preauthkeys create -u headscale
+        headscale users create molecule || true
+        headscale preauthkeys create -u molecule
       args:
         executable: /bin/bash
       delegate_to: headscale
