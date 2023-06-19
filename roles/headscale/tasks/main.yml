@@ -22,7 +22,7 @@
 - name: Create Headscale config
   ansible.builtin.template:
     src: config.yaml.j2
-    dest: /etc/headscale/config.yaml
+    dest: "{{ headscale_config }}"
     owner: root
     group: root
     mode: 0644
