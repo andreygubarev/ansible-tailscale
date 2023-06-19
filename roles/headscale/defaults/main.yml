@@ -7,4 +7,5 @@ headscale_checksum: "sha256:https://github.com/juanfont/headscale/releases/downl
 
 headscale_binary: "/usr/bin/headscale"
 headscale_workdir: "/var/lib/headscale"
-headscale_config: "/etc/headscale/config.yaml"
+headscale_confdir: "/etc/headscale"
+headscale_config: "{{ headscale_confdir }}/config.yaml"

@@ -19,6 +19,17 @@
     dest: "{{ headscale_binary }}"
     mode: 0755
 
+- name: Create Headscale directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - "{{ headscale_workdir }}"
+    - "{{ headscale_confdir }}"
+
 - name: Create Headscale config
   ansible.builtin.template:
     src: config.yaml.j2
