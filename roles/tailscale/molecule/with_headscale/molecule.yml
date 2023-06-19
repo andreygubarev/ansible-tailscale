@@ -4,17 +4,17 @@ dependency:
 driver:
   name: molecule-qemu
 platforms:
-  - name: debian-bullseye-arm64
+  - name: headscale
     image_arch: aarch64
     image_url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-arm64.qcow2
     image_checksum: sha512:https://cloud.debian.org/images/cloud/bullseye/latest/SHA512SUMS
-    network_mode: user
-    network_ssh_port: 2222
+    network_mode: vmnet-shared
+  - name: tailscale
+    image_arch: aarch64
+    image_url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-arm64.qcow2
+    image_checksum: sha512:https://cloud.debian.org/images/cloud/bullseye/latest/SHA512SUMS
+    network_mode: vmnet-shared
 provisioner:
   name: ansible
-  inventory:
-    host_vars:
-      headscale:
-        headscale_bind_addr: 0.0.0.0
 verifier:
   name: testinfra

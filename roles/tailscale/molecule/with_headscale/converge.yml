@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: tailscale
-  become: true
 
   environment:
     http_proxy: "{{ lookup('ansible.builtin.env', 'http_proxy') | default(omit) }}"
@@ -11,3 +10,5 @@
     - name: "Include tailscale"
       ansible.builtin.include_role:
         name: "tailscale"
+      vars:
+        tailscale_login_server: hostvars['headscale']['ansible_default_ipv4']['address']
