@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  strategy: linear
   gather_facts: true
 
   environment:
@@ -9,7 +8,7 @@
     https_proxy: "{{ lookup('ansible.builtin.env', 'https_proxy') | default(omit) }}"
 
   tasks:
-    - name: Get auth key
+    - name: Get auth key  # noqa: run-once[task]
       ansible.builtin.shell: |
         set -euo pipefail
         headscale users create molecule || true
