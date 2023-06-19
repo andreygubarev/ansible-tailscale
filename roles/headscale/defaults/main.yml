@@ -14,3 +14,24 @@ headscale_statedir: "/var/lib/headscale"
 
 headscale_binary: "/usr/bin/headscale"
 headscale_config: "{{ headscale_confdir }}/headscale.yaml"
+
+headscale_bind_addr: "127.0.0.1"
+headscale_bind_port: 8514
+headscale_advertise_proto: "https"
+headscale_advertise_addr: "127.0.0.1"
+headscale_advertise_port: 8514
+
+headscale_metrics_enabled: true
+headscale_metrics_bind_addr: "127.0.0.1"
+headscale_metrics_bind_port: 8515
+
+headscale_grpc_enabled: true
+headscale_grpc_bind_addr: "127.0.0.1"
+headscale_grpc_bind_port: 8516
+headscale_grpc_insecure: false
+
+headscale_magicdns_enabled: true
+headscale_magicdns_domain: "headscale.local"
+
+headscale_database_type: "sqlite3"
+headscale_database_path: "{{ headscale_statedir }}/headscale.db"
