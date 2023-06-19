@@ -64,7 +64,7 @@
     mode: 0640
   register: headscale_state_config
 
-- name: Check config
+- name: Check config  # noqa: no-handler
   ansible.builtin.command: >
     {{ headscale_binary }}
     --config {{ headscale_config }}
