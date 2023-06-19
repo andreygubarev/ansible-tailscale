@@ -13,7 +13,7 @@ headscale_rundir: "/var/run/headscale"
 headscale_statedir: "/var/lib/headscale"
 
 headscale_binary: "/usr/bin/headscale"
-headscale_config: "{{ headscale_confdir }}/headscale.yaml"
+headscale_config: "{{ headscale_confdir }}/config.yaml"
 
 headscale_bind_addr: "127.0.0.1"
 headscale_bind_port: 8514
