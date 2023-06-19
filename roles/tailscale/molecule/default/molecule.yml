@@ -12,9 +12,5 @@ platforms:
     network_ssh_port: 2222
 provisioner:
   name: ansible
-  inventory:
-    host_vars:
-      headscale:
-        headscale_bind_addr: 0.0.0.0
 verifier:
   name: testinfra
