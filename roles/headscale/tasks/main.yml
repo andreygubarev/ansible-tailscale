@@ -49,7 +49,7 @@
     state: directory
     owner: "{{ headscale_user }}"
     group: "{{ headscale_group }}"
-    mode: 0755
+    mode: 0750
   loop:
     - "{{ headscale_confdir }}"
     - "{{ headscale_rundir }}"
@@ -61,7 +61,7 @@
     dest: "{{ headscale_config }}"
     owner: "{{ headscale_user }}"
     group: "{{ headscale_group }}"
-    mode: 0644
+    mode: 0640
   register: headscale_state_config
 
 - name: Check config
