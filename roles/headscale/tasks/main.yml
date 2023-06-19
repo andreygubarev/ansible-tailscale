@@ -12,9 +12,24 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: Download headscale binary
+- name: Download Headscale binary
   ansible.builtin.get_url:
     url: "{{ headscale_download }}"
     dest: "{{ headscale_binary }}"
     mode: 0755
 
+- name: Create Headscale service
+  ansible.builtin.template:
+    src: headscale.service.j2
+    dest: /usr/lib/systemd/system/headscale.service
+    owner: root
+    group: root
+    mode: 0644
+  register: headscale_systemd_service
+
+- name: Enable Headscale service
+  ansible.builtin.systemd:
+    name: headscale
+    enabled: true
+    daemon_reload: "{{ headscale_systemd_service.changed }}"
+    state: "{{ headscale_systemd_service.changed | ternary('restarted', 'started') }}"
