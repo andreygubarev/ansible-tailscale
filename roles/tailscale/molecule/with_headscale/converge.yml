@@ -1,6 +1,32 @@
 ---
 - name: Converge
+  hosts: all
+  gather_facts: true
+
+  environment:
+    http_proxy: "{{ lookup('ansible.builtin.env', 'http_proxy') | default(omit) }}"
+    https_proxy: "{{ lookup('ansible.builtin.env', 'https_proxy') | default(omit) }}"
+
+  tasks:
+    - name: Get auth key
+      ansible.builtin.shell: |
+        set -euo pipefail
+        headscale users create headscale || true
+        headscale preauthkeys create -u headscale
+      args:
+        executable: /bin/bash
+      delegate_to: headscale
+      run_once: true
+      register: headscale_auth_key
+
+    - name: Set auth key
+      ansible.builtin.set_fact:
+        tailscale_auth_key: "{{ headscale_auth_key.stdout_lines[-1] }}"
+      delegate_to: tailscale
+
+- name: Converge
   hosts: tailscale
+  gather_facts: true
 
   environment:
     http_proxy: "{{ lookup('ansible.builtin.env', 'http_proxy') | default(omit) }}"
@@ -11,4 +37,4 @@
       ansible.builtin.include_role:
         name: "tailscale"
       vars:
-        tailscale_login_server: hostvars['headscale']['ansible_default_ipv4']['address']
+        tailscale_login_server: "http://{{ hostvars['headscale']['ansible_host'] }}:8514"
