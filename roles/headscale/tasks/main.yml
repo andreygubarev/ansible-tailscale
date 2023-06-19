@@ -67,6 +67,8 @@
     {{ headscale_binary }}
     --config {{ headscale_config }}
     configtest
+  become: true
+  become_user: "{{ headscale_user }}"
   changed_when: false
   when: headscale_state_config is changed
 
