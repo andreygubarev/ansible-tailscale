@@ -15,9 +15,9 @@
 - name: Install APT dependencies
   ansible.builtin.apt:
     name:
-      - gnupg
       - apt-transport-https
       - ca-certificates
+      - gnupg
     state: present
 
 - name: Add APT key
