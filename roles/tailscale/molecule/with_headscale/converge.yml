@@ -18,6 +18,7 @@
       delegate_to: headscale
       run_once: true
       register: headscale_auth_key
+      changed_when: false
 
     - name: Set auth key
       ansible.builtin.set_fact:
