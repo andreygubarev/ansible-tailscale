@@ -31,7 +31,7 @@ headscale_grpc_bind_port: 8516
 headscale_grpc_insecure: false
 
 headscale_magicdns_enabled: true
-headscale_magicdns_domain: "headscale.local"
+headscale_magicdns_domain: "local"
 
 headscale_database_type: "sqlite3"
 headscale_database_path: "{{ headscale_statedir }}/headscale.db"

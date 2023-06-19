@@ -21,4 +21,4 @@ provisioner:
       headscale:
         headscale_bind_addr: 0.0.0.0
 verifier:
-  name: testinfra
+  name: ansible
