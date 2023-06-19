@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: tailscale
+  gather_facts: false
+  tasks:
+    - name: Register Tailscale status
+      ansible.builtin.command: >-
+        tailscale status --json
+      register: tailscale_status
+      changed_when: false
+
+    - name: Check status
+      ansible.builtin.assert:
+        that:
+          - (tailscale_status.stdout | from_json)['BackendState'] == 'Running'
