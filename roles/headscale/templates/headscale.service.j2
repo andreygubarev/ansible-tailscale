@@ -6,8 +6,8 @@ X-Restart-Triggers={{ headscale_config }}
 
 [Service]
 Type=simple
-User=headscale
-Group=headscale
+User={{ headscale_user }}
+Group={{ headscale_group }}
 ExecStart={{ headscale_binary }} --config {{ headscale_config }} serve
 Restart=always
 RestartSec=5

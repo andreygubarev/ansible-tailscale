@@ -12,7 +12,28 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: Download Headscale binary
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ headscale_user }}"
+    shell: /bin/false
+    system: true
+    createhome: false
+    state: present
+
+- name: Create group
+  ansible.builtin.group:
+    name: "{{ headscale_group }}"
+    system: true
+    state: present
+
+- name: Ensure user belongs to group
+  ansible.builtin.user:
+    name: "{{ headscale_user }}"
+    groups: "{{ headscale_group }}"
+    append: true
+    state: present
+
+- name: Download binary
   ansible.builtin.get_url:
     url: "{{ headscale_url }}"
     checksum: "{{ headscale_checksum }}"
@@ -21,46 +42,50 @@
     owner: root
     group: root
 
-- name: Create Headscale directories
+- name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ headscale_user }}"
+    group: "{{ headscale_group }}"
     mode: 0755
   loop:
     - "{{ headscale_workdir }}"
     - "{{ headscale_confdir }}"
 
-- name: Create Headscale config
+- name: Create config
   ansible.builtin.template:
     src: headscale.yaml.j2
     dest: "{{ headscale_config }}"
-    owner: root
-    group: root
+    owner: "{{ headscale_user }}"
+    group: "{{ headscale_group }}"
     mode: 0644
-  register: headscale_config
+  register: headscale_state_config
 
-- name: Check Headscale config
+- name: Check config
   ansible.builtin.command: >
     {{ headscale_binary }}
     --config {{ headscale_config }}
     configtest
   changed_when: false
-  when: headscale_config is changed
+  when: headscale_state_config is changed
 
-- name: Create Headscale service
+- name: Create service
   ansible.builtin.template:
     src: headscale.service.j2
     dest: /usr/lib/systemd/system/headscale.service
     owner: root
     group: root
     mode: 0644
-  register: headscale_systemd_service
+  register: headscale_state_systemd_service
 
-- name: Enable Headscale service
+- name: Enable service
   ansible.builtin.systemd:
     name: headscale
     enabled: true
-    daemon_reload: "{{ headscale_systemd_service.changed }}"
-    state: "{{ headscale_systemd_service.changed | ternary('restarted', 'started') }}"
+    daemon_reload: "{{ headscale_state_systemd_service.changed }}"
+
+- name: Start service
+  ansible.builtin.systemd:
+    name: headscale
+    state: "{{ headscale_state_systemd_service.changed | ternary('restarted', 'started') }}"
