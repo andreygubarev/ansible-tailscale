@@ -8,7 +8,9 @@ headscale_checksum: "sha256:https://github.com/juanfont/headscale/releases/downl
 headscale_user: "headscale"
 headscale_group: "headscale"
 
-headscale_binary: "/usr/bin/headscale"
-headscale_workdir: "/var/lib/headscale"
 headscale_confdir: "/etc/headscale"
+headscale_rundir: "/var/run/headscale"
+headscale_statedir: "/var/lib/headscale"
+
+headscale_binary: "/usr/bin/headscale"
 headscale_config: "{{ headscale_confdir }}/headscale.yaml"

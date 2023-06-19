@@ -15,7 +15,8 @@ provisioner:
   inventory:
     host_vars:
       debian-bullseye-arm64:
-        headscale_workdir: /mnt/local/headscale
-        headscale_confdir: /mnt/local/headscale/conf.d
+        headscale_confdir: /mnt/local/headscale/config
+        headscale_rundir: /mnt/local/headscale/run
+        headscale_statedir: /mnt/local/headscale/state
 verifier:
   name: testinfra

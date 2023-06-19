@@ -34,9 +34,9 @@ grpc_listen_addr: 127.0.0.1:50443
 # are doing.
 grpc_allow_insecure: false
 
-private_key_path: {{ headscale_workdir }}/private.key
+private_key_path: {{ headscale_statedir }}/private.key
 noise:
-  private_key_path: {{ headscale_workdir }}/noise_private.key
+  private_key_path: {{ headscale_statedir }}/noise_private.key
 
 ip_prefixes:
   # - fd7a:115c:a1e0::/48
@@ -106,7 +106,7 @@ node_update_check_interval: 10s
 db_type: sqlite3
 
 # For production:
-db_path: {{ headscale_workdir }}/db.sqlite
+db_path: {{ headscale_statedir }}/db.sqlite
 
 
 ### TLS configuration
@@ -218,7 +218,7 @@ dns_config:
 
 # Unix socket used for the CLI to connect without authentication
 # Note: for production you will want to set this to something like:
-unix_socket: {{ headscale_workdir }}/headscale.sock
+unix_socket: {{ headscale_rundir }}/headscale.sock
 unix_socket_permission: "0770"
 
 # Logtail configuration

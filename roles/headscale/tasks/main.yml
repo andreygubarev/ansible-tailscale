@@ -18,7 +18,7 @@
     shell: /bin/false
     system: true
     createhome: false
-    home: "{{ headscale_workdir }}"
+    home: "{{ headscale_statedir }}"
     state: present
 
 - name: Create group
@@ -51,8 +51,9 @@
     group: "{{ headscale_group }}"
     mode: 0755
   loop:
-    - "{{ headscale_workdir }}"
     - "{{ headscale_confdir }}"
+    - "{{ headscale_rundir }}"
+    - "{{ headscale_statedir }}"
 
 - name: Create config
   ansible.builtin.template:
