@@ -92,4 +92,4 @@
 - name: Start service
   ansible.builtin.systemd:
     name: headscale
-    state: "{{ headscale_state_systemd_service.changed | ternary('restarted', 'started') }}"
+    state: "{{ headscale_state_config.changed | ternary('restarted', 'started') }}"
