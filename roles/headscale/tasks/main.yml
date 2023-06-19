@@ -18,6 +18,7 @@
     shell: /bin/false
     system: true
     createhome: false
+    home: "{{ headscale_workdir }}"
     state: present
 
 - name: Create group
