@@ -81,6 +81,7 @@
         tailscale
         --socket {{ tailscale_socket }}
         up
+        --hostname {{ ansible_hostname }}
         {% if tailscale_login_server %}
         --login-server {{ tailscale_login_server }}
         {% endif %}
