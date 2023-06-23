@@ -85,5 +85,6 @@
         {% if tailscale_login_server %}
         --login-server {{ tailscale_login_server }}
         {% endif %}
+        --timeout {{ tailscale_login_timeout }}
         --auth-key {{ tailscale_auth_key }}
       changed_when: true
