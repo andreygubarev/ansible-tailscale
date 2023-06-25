@@ -93,3 +93,11 @@
   ansible.builtin.systemd:
     name: headscale
     state: "{{ headscale_state_config.changed | ternary('restarted', 'started') }}"
+
+- name: Create headscale network
+  ansible.builtin.shell: |
+    set -euo pipefail
+    {{ headscale_binary }} --config {{ headscale_config }} users create {{ headscale_magicdns_network }} || true
+  args:
+    executable: /bin/bash
+  changed_when: false

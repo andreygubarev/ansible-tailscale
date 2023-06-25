@@ -1,5 +1,7 @@
 """Role testing files using testinfra."""
 
+import json
+
 
 def test_headscale_binary(host):
     """Validate headscale installation."""
@@ -33,3 +35,12 @@ def test_headscale_dirs(host):
     assert d.user == "headscale"
     assert d.group == "headscale"
     assert d.mode == 0o750
+
+
+def test_headscale_network(host):
+    r = host.run("headscale users list -o json")
+    assert r.rc == 0
+
+    users = json.loads(r.stdout)
+    users = [u['name'] for u in users]
+    assert "map" in users
