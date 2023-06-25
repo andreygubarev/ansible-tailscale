@@ -3,7 +3,8 @@ tailscale_auth_key: ""
 tailscale_login_server: ""
 tailscale_login_timeout: 30s
 
-tailscale_state: "/var/lib/tailscale/tailscaled.state"
+tailscale_statedir: "/var/lib/tailscale"
+tailscale_state: "{{ tailscale_statedir }}/tailscaled.state"
 tailscale_socket: "/run/tailscale/tailscaled.sock"
 tailscale_logs: false
 tailscale_args: >-

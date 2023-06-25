@@ -35,6 +35,14 @@
     name: tailscale
     state: present
 
+- name: Create Tailscale state directory
+  ansible.builtin.file:
+    path: "{{ tailscale_statedir }}"
+    owner: root
+    group: root
+    mode: 0644
+    state: directory
+
 - name: Create Tailscale service
   ansible.builtin.template:
     src: tailscaled.service.j2
