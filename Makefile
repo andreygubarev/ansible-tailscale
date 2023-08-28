@@ -1,33 +1,39 @@
-ANSIBLE_VIRTUALENV ?= .venv
-ANSIBLE_PYTHON := . $(ANSIBLE_VIRTUALENV)/bin/activate && python3
-ANSIBLE_PIP := $(ANSIBLE_PYTHON) -m pip
-ANSIBLE_LINT := . $(ANSIBLE_VIRTUALENV)/bin/activate && ansible-lint
-ANSIBLE_GALAXY := . $(ANSIBLE_VIRTUALENV)/bin/activate && ansible-galaxy
+### Make ######################################################################
+MAKEFILE_DIR := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 
 .PHONY: help
-help: ## Show this help
+help: ## Brief overview of available targets and their descriptions
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-$(ANSIBLE_VIRTUALENV):
-	python3 -m venv $(ANSIBLE_VIRTUALENV)
-	$(ANSIBLE_PIP) install 'setuptools>=45.0.0' wheel
-	$(ANSIBLE_PIP) install -r requirements.txt
+### Ansible ###################################################################
+ANSIBLE_GALAXY := ansible-galaxy
+ANSIBLE_LINT := ansible-lint
+ANSIBLE_MOLECULE := molecule
 
-.PHONY: virtualenv
-virtualenv: $(ANSIBLE_VIRTUALENV) ## Create local environment
+.PHONY: clean
+clean: ## Clean up the build artifacts, object files, executables, and any other generated files
+	rm -rf *.tar.gz
 
-.PHONY: lint
-lint: virtualenv ## Lint Ansible code
+.PHONY: format
+format: ## Automatically format the source code
 	@$(ANSIBLE_LINT) -v
 
 .PHONY: build
-build: lint ## Build collection archive
+build: format ## Build collection archive
 	$(ANSIBLE_GALAXY) collection build --force
 
-.PHONY: publish
-publish: clean build ## Publish collection
-	$(ANSIBLE_GALAXY) collection publish *.tar.gz --api-key $(GALAXY_API_KEY)
+ANSIBLE_ROLES := $(shell find roles -mindepth 1 -maxdepth 1 -type d)
+$(ANSIBLE_ROLES):
+	cd $@ && $(ANSIBLE_MOLECULE) test
+.PHONY: $(ANSIBLE_ROLES)
 
-.PHONY: clean
-clean: ## Remove temporary files
-	rm -rf $(ANSIBLE_VIRTUALENV) *.tar.gz
+.PHONY: test
+test: $(ANSIBLE_ROLES)  ## Run tests
+
+.PHONY: install
+install: $(PYTHON_VENV) build ## Install collection
+	$(ANSIBLE_GALAXY) collection install *.tar.gz
+
+.PHONY: release
+release: clean build ## Publish collection
+	$(ANSIBLE_GALAXY) collection publish *.tar.gz --api-key $(GALAXY_API_KEY)
